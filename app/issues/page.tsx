@@ -1,18 +1,15 @@
 import prisma from "@/prisma/client";
-import { Button, Table } from "@radix-ui/themes";
-import Link from "next/link";
+import { Table } from "@radix-ui/themes";
 import React from "react";
 import IssuesStatusBadge from "../components/IssuesStatusBadge";
-
+import IssueActions from "./IssueActions";
+import delay from "delay";
 const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
+  await delay(2000);
   return (
     <div>
-      <div className="mb-5">
-        <Button>
-          <Link href="/issues/new">New Issues</Link>
-        </Button>
-      </div>
+      <IssueActions />
       <Table.Root variant="surface">
         <Table.Header>
           <Table.Row>
@@ -31,14 +28,14 @@ const IssuesPage = async () => {
               <Table.Cell>
                 <p className="font-bold text-slate-700 mb-1">{issue.title}</p>
                 <div className="block md:hidden flex-col space-y-2">
-                  <IssuesStatusBadge status={issue.status}/>
-                 <p className="text-slate-500">
-                 {issue.createdAt.toDateString()}
-                 </p> 
+                  <IssuesStatusBadge status={issue.status} />
+                  <p className="text-slate-500">
+                    {issue.createdAt.toDateString()}
+                  </p>
                 </div>
               </Table.Cell>
               <Table.Cell className="hidden md:table-cell">
-              <IssuesStatusBadge status={issue.status}/>
+                <IssuesStatusBadge status={issue.status} />
               </Table.Cell>
               <Table.Cell className="hidden md:table-cell">
                 {issue.createdAt.toDateString()}

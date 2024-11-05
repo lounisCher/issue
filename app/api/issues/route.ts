@@ -5,6 +5,7 @@ import { issueSchema } from "../../validationSchemas";
 
 export async function POST(request: NextRequest){
     const body = await request.json();
+    if(!body) return NextResponse.json({error: "No Data"});
     const validation = issueSchema.safeParse(body);
     if(!validation.success)
         return NextResponse.json(validation.error.format(), {status: 400});
@@ -12,7 +13,7 @@ export async function POST(request: NextRequest){
     const newIssue = await prisma.issue.create({
         data:{title: body.title, description: body.description}
     });
-
+    if(!newIssue) return NextResponse.json({error:"Unexpected Error occured"});
     return NextResponse.json(newIssue);
 
 

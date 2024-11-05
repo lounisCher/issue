@@ -1,10 +1,12 @@
-import IssuesStatusBadge from '@/app/components/IssuesStatusBadge'
+import IssuesStatusBadge from '@/app/_components/IssuesStatusBadge'
 import { Issue } from '@prisma/client'
 import { Heading, Flex, Card, Text } from '@radix-ui/themes'
-import React from 'react'
+import { notFound } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
 
 const IssueDetails = ({issue}:{issue:Issue}) => {
+
+    if(!issue) notFound()
 
   return (
     <>

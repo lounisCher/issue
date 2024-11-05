@@ -1,20 +1,20 @@
 "use client";
 
-import { Button, Callout, Text, TextField } from "@radix-ui/themes";
-import dynamic from "next/dynamic";
+import { Button, Callout,  TextField } from "@radix-ui/themes";
+// import dynamic from "next/dynamic";
 import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { notFound, useRouter } from "next/navigation";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { issueSchema } from "@/app/validationSchemas";
 import { z } from "zod";
-import ErrorMessage from "@/app/components/ErrorMessage";
-import Spinner from "@/app/components/Spinner";
+import ErrorMessage from "@/app/_components/ErrorMessage";
+import Spinner from "@/app/_components/Spinner";
 import { Issue } from "@prisma/client";
 
-const SimpleMde = dynamic(()=> import('react-simplemde-editor'), {ssr: false});
+// const SimpleMde = dynamic(()=> import('react-simplemde-editor'), {ssr: false});
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
@@ -23,7 +23,9 @@ interface Props{
 }
 
 const IssueForm = ({issue}: Props) => {
-  const { push } = useRouter();
+  if (!issue) notFound()
+  const router = useRouter();
+  
   const [Submiting, setSubmiting]=useState(false);
 
   const {
@@ -48,9 +50,10 @@ const IssueForm = ({issue}: Props) => {
         onSubmit={handleSubmit(async (data) => {
           try {
             setSubmiting(true)
-            await axios.post("/api/issues", data);
-            push("/issues");
-          } catch (error) {
+            if (issue) await axios.patch('/api/issues/'+issue.id, data)
+            else await axios.post("/api/issues", data);
+            router.push("/issues");
+          } catch {
             setSubmiting(false)
             setError("An unexpected error is occured");
           }
@@ -69,7 +72,10 @@ const IssueForm = ({issue}: Props) => {
           control={control}
           defaultValue={issue?.description}
           render={({ field }) => (
-            <SimpleMde placeholder="Description" {...field} />
+            // <SimpleMde placeholder="Description" {...field} />
+            <TextField.Root placeholder="desc" {...field} 
+        
+        />
           )}
         />
         
@@ -78,7 +84,8 @@ const IssueForm = ({issue}: Props) => {
           </ErrorMessage>
 
         <Button disabled={Submiting}>
-          Submit new issues{Submiting &&<Spinner/>}
+          {issue ?"update issue":"Submit new issues"}
+          {Submiting &&<Spinner/>}
         </Button>
       </form>
     </div>

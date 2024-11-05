@@ -1,11 +1,10 @@
 "use client";
-import Link from "next/link";
-import React, { useEffect, useState } from "react";
-import { AiFillBug } from "react-icons/ai";
+import { Avatar, Box, Button, Container, DropdownMenu, Flex, Text } from "@radix-ui/themes";
 import classNames from "classnames";
-import { usePathname } from "next/navigation";
-import { Box, Container, Flex } from "@radix-ui/themes";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { AiFillBug } from "react-icons/ai";
 
 const NavBar = () => {
   const { status, data: session } = useSession();
@@ -43,7 +42,26 @@ const NavBar = () => {
 
         <Box>
           {status === "authenticated" && (
-            <Link href="/api/auth/signout">LogOut</Link>
+            <DropdownMenu.Root>
+              <DropdownMenu.Trigger>
+                <Button variant="ghost" radius="full"
+                className="cursor-pointer">
+                <Avatar src={session.user!.image!} fallback="?" size={"2"} radius="full"
+                className="cursor-pointer"
+                />
+                </Button>
+              </DropdownMenu.Trigger>
+              <DropdownMenu.Content>
+                <DropdownMenu.Label>
+                <Text size="2">
+                {session.user!.email}
+                </Text>
+                </DropdownMenu.Label>     
+                <DropdownMenu.Item>
+                <Link href="/api/auth/signout">LogOut</Link>  
+                </DropdownMenu.Item>           
+              </DropdownMenu.Content>
+            </DropdownMenu.Root>
           )}
           {status === "unauthenticated" && (
             <Link href="/api/auth/signin">LogIn</Link>

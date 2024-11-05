@@ -5,11 +5,14 @@ import { notFound } from 'next/navigation'
 
 
 const EditIssuePage = async ({params}: {params: Promise<{ id: string }>}) => {
-  const {id} = await params;
-  if (!id) notFound();
+  const idIssue = (await params).id;
+  if (!idIssue) notFound();
+  const id = parseInt(idIssue, 10);
+  if (isNaN(id)) return notFound();
+
 
   const issue = await prisma.issue.findUnique({
-        where: {id: parseInt(id, 10)}
+        where: {id: id}
     });
     if(!issue) notFound();
   return (

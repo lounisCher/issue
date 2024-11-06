@@ -11,10 +11,12 @@ type SearchParams = Promise<{ [key: string]: Status }>
 const IssuesPage = async (props: {
   searchParams: SearchParams
 }) => {
-  const searchParams = await props.searchParams
+  const searchParams = await props.searchParams;
+  const statuses = Object.values(Status);
+  const status = statuses.includes(searchParams.status)?searchParams.status:undefined;
   const issues = await prisma.issue.findMany({
     where:{
-      status: searchParams.status
+      status: status
     }
   });
 

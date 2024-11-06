@@ -14,7 +14,8 @@ const IssueStatusFilter = () => {
     ]
   return (
     <Select.Root onValueChange={(status)=>{
-        const validStatuses = ["OPEN", "IN_PROGRESS", "CLOSED"];
+        //the same technique used in the page file but with object()
+        const validStatuses = ["OPEN", "IN_PROGRESS", "CLOSED"]; 
         const query = validStatuses.includes(status) ? `?status=${status}` : "";
         router.push("/issues"+query);
     }}>

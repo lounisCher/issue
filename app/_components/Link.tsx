@@ -7,7 +7,7 @@ interface Props{
     children: string;
 }
 
-const Link = ({href, children}: Props) => {
+const LinkComp = ({href, children}: Props) => {
   return (
    <NextLink href={href} passHref legacyBehavior >
     <RadixLink>{children}</RadixLink>
@@ -15,4 +15,4 @@ const Link = ({href, children}: Props) => {
   )
 }
 
-export default Link
+export default LinkComp

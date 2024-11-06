@@ -1,9 +1,12 @@
+import { auth } from "@/app/auth";
 import { issueSchema } from "@/app/validationSchemas";
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 
 export async function PATCH(request:NextRequest, {params}: {params: Promise<{ id: string }>}){
+    const session= await auth();
+    if(!session) return NextResponse.json({}, {status:401});
     const idIssue = (await params).id;
     const id = parseInt(idIssue, 10);    
     const body = await request.json();
@@ -28,7 +31,8 @@ export async function PATCH(request:NextRequest, {params}: {params: Promise<{ id
 }
 
 export async function DELETE(request:NextRequest, {params}:{params:  Promise<{ id: string }>}){
-
+    const session= await auth();
+    if(!session) return NextResponse.json({}, {status:401});
     const idIssue = (await params).id;
     const id = parseInt(idIssue, 10);   
     const toDeleteIssue = await prisma.issue.findUnique({

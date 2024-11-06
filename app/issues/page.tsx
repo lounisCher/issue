@@ -1,6 +1,6 @@
 import prisma from "@/prisma/client";
 import { Issue, Status } from "@prisma/client";
-import { Box } from "@radix-ui/themes";
+import { Box, Flex } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
 import Pagination from "../_components/Pagination";
 import IssueActions from "./IssueActions";
@@ -39,17 +39,15 @@ const IssuesPage = async (props: { searchParams: SearchParams }) => {
 
   if (!issues) return notFound();
   return (
-    <div>
+    <Flex direction="column" gap="3">
       <IssueActions />
       <IssueTable searchParams={searchParams} issues={issues} />
-      <Box mt={"2"}>
-        <Pagination
+         <Pagination
           pageSize={pageSize}
           currentPage={page}
           itemCount={issueCount}
         />
-      </Box>
-    </div>
+     </Flex>
   );
 };
 

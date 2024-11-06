@@ -4,9 +4,20 @@ import IssuesStatusBadge from "../_components/IssuesStatusBadge";
 import Link from "../_components/Link";
 import IssueActions from "./IssueActions";
 import { notFound } from "next/navigation";
+import { Status } from "@prisma/client";
 
-const IssuesPage = async () => {
-  const issues = await prisma.issue.findMany();
+type SearchParams = Promise<{ [key: string]: Status }>
+
+const IssuesPage = async (props: {
+  searchParams: SearchParams
+}) => {
+  const searchParams = await props.searchParams
+  const issues = await prisma.issue.findMany({
+    where:{
+      status: searchParams.status
+    }
+  });
+
   if(!issues) return notFound();
   return (
     <div>

@@ -28,9 +28,10 @@ const IssueDetailPage = async ({params}: {params: Promise<{ id: string }>}) => {
       <Box className="md:col-span-4">
         <IssueDetails issue={issue}/>
       </Box>
-      {session && <Box>
-        <Flex direction="column">
-        <AssigneeSelect issue={issue}/>  
+      {session && 
+      <Box className="mt-2 lg:m-0">
+        <AssigneeSelect issue={issue} /> 
+        <Flex direction="column"> 
         <EditIssuesButton issueId={issue.id}/>
         <DeleteIssueButton issueId={issue.id}/>
         </Flex>

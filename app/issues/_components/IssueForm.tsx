@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Callout,  TextField } from "@radix-ui/themes";
+import { Button, Callout, Select, TextField } from "@radix-ui/themes";
 import dynamic from "next/dynamic";
 import "easymde/dist/easymde.min.css";
 import { useForm, Controller } from "react-hook-form";
@@ -14,18 +14,20 @@ import ErrorMessage from "@/app/_components/ErrorMessage";
 import Spinner from "@/app/_components/Spinner";
 import { Issue } from "@prisma/client";
 
-const SimpleMde = dynamic(()=> import('react-simplemde-editor'), {ssr: false});
+const SimpleMde = dynamic(() => import("react-simplemde-editor"), {
+  ssr: false,
+});
 
 type IssueFormData = z.infer<typeof issueSchema>;
 
-interface Props{
-  issue?:Issue
+interface Props {
+  issue?: Issue;
 }
 
-const IssueForm = ({issue}: Props) => {
+const IssueForm = ({ issue }: Props) => {
   const router = useRouter();
-  
-  const [Submiting, setSubmiting]=useState(false);
+
+  const [Submiting, setSubmiting] = useState(false);
 
   const {
     register,
@@ -48,42 +50,56 @@ const IssueForm = ({issue}: Props) => {
         className="space-y-3"
         onSubmit={handleSubmit(async (data) => {
           try {
-            setSubmiting(true)
-            if (issue) await axios.patch('/api/issues/'+issue.id, data)
+            setSubmiting(true);
+            console.log("goku", data);
+            if (issue) await axios.patch("/api/issues/" + issue.id, data);
             else await axios.post("/api/issues", data);
             router.push("/issues");
             router.refresh();
           } catch {
-            setSubmiting(false)
+            setSubmiting(false);
             setError("An unexpected error is occured");
           }
         })}
       >
-        <TextField.Root placeholder="Title" {...register("title")} 
-        defaultValue={issue?.title}
+        <Controller
+          name="status"
+          control={control}
+          defaultValue={issue?.status || "OPEN"}
+          render={({ field }) => (
+            <Select.Root value={field.value} onValueChange={field.onChange}>
+              <Select.Trigger placeholder="Select the status" />
+              <Select.Content>
+                <Select.Item value="OPEN">Open</Select.Item>
+                <Select.Item value="CLOSED">Closed</Select.Item>
+                <Select.Item value="IN_PROGRESS">In Progress</Select.Item>
+              </Select.Content>
+            </Select.Root>
+          )}
         />
-        
-          <ErrorMessage>
-            {errors.title?.message}
-          </ErrorMessage>
-   
+
+        <TextField.Root
+          placeholder="Title"
+          {...register("title")}
+          defaultValue={issue?.title}
+        />
+
+        <ErrorMessage>{errors.title?.message}</ErrorMessage>
+
         <Controller
           name="description"
           control={control}
           defaultValue={issue?.description}
           render={({ field }) => (
-            <SimpleMde placeholder="Description" {...field} />  
-          )}      
+            <SimpleMde placeholder="Description" {...field} />
+          )}
         />
-          
-        
-          <ErrorMessage>
-            {errors.description?.message}
-          </ErrorMessage>
+
+        <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
         <Button disabled={Submiting}>
-          {issue ?"update issue":"Submit new issues"}
-          {Submiting &&<Spinner/>}
+          {issue ? "update issue" : "Submit new issues"}
+          {Submiting && <Spinner />}
         </Button>
       </form>
     </div>

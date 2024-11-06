@@ -24,7 +24,7 @@ const AssigneeSelect = ({ issue }: { issue: Issue }) => {
   return (
     <>
     <Select.Root
-      defaultValue={issue.assignedToUserId || " "}
+      defaultValue={issue.assignedToUserId || "User"}
       onValueChange={(userId) => {
         const assignedToUserId = userId==="Unassigned" ? null : userId
         axios.patch("/api/issues/" + issue.id, {

@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import Pagination from "../_components/Pagination";
 import IssueActions from "./IssueActions";
 import IssueTable, { columnNames } from "./IssueTable";
+import { Metadata } from "next";
 
 type SearchParams = Promise<{
   status: Status;
@@ -53,4 +54,8 @@ const IssuesPage = async (props: { searchParams: SearchParams }) => {
 
 export const dynamic = "force-dynamic";
 // export const revalidate = 10;
+export const metadata:Metadata={
+  title: "Issue Tracker - Issues pages",
+  description:"View all issues details"
+}
 export default IssuesPage;

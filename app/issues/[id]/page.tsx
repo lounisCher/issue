@@ -40,4 +40,6 @@ const IssueDetailPage = async ({params}: {params: Promise<{ id: string }>}) => {
   );
 };
 
+
+
 export default IssueDetailPage;
